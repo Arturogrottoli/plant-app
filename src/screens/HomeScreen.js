@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
     FlatList,
@@ -8,21 +9,16 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
-import { loadPlants } from '../utils/storage';
+import { loadPlants } from '../../src/utils/storage';
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen() {
+    const router = useRouter();
     const [plants, setPlants] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
         loadPlantsData();
-
-        const unsubscribe = navigation.addListener('focus', () => {
-            loadPlantsData();
-        });
-
-        return unsubscribe;
-    }, [navigation]);
+    }, []);
 
     const loadPlantsData = async () => {
         const data = await loadPlants();
@@ -38,16 +34,16 @@ export default function HomeScreen({ navigation }) {
     const renderPlantCard = ({ item }) => (
         <TouchableOpacity
             style={styles.card}
-            onPress={() => navigation.navigate('PlantDetail', { plantId: item.id })}
+            onPress={() => router.push(`/plant/${item.id}`)}
         >
             {item.image && (
                 <Image source={{ uri: item.image }} style={styles.cardImage} />
             )}
             <View style={styles.cardContent}>
-                <Text style={styles.plantName}>{item.name || 'Unnamed Plant'}</Text>
-                <Text style={styles.species}>{item.species || 'Unknown species'}</Text>
+                <Text style={styles.plantName}>{item.name || 'Sin nombre'}</Text>
+                <Text style={styles.species}>{item.species || 'Especie desconocida'}</Text>
                 <Text style={styles.waterInfo}>
-                    💧 Water every {item.wateringDays} days
+                    💧 Regar cada {item.wateringDays} días
                 </Text>
             </View>
         </TouchableOpacity>
@@ -67,30 +63,24 @@ export default function HomeScreen({ navigation }) {
                     <View style={styles.emptyContainer}>
                         <Text style={styles.emptyText}>🌿</Text>
                         <Text style={styles.emptySubtext}>
-                            No plants yet!{'\n'}Add your first one
+                            No tenés plantas todavía!{'\n'}Agregá la primera
                         </Text>
                     </View>
                 }
             />
-
             <TouchableOpacity
                 style={styles.addButton}
-                onPress={() => navigation.navigate('AddPlant')}
+                onPress={() => router.push('/add-plant')}
             >
-                <Text style={styles.addButtonText}>+ Add Plant</Text>
+                <Text style={styles.addButtonText}>+ Agregar Planta</Text>
             </TouchableOpacity>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#f5f5f5',
-    },
-    list: {
-        padding: 16,
-    },
+    container: { flex: 1, backgroundColor: '#f5f5f5' },
+    list: { padding: 16 },
     card: {
         backgroundColor: 'white',
         borderRadius: 12,
@@ -102,58 +92,21 @@ const styles = StyleSheet.create({
         elevation: 3,
         overflow: 'hidden',
     },
-    cardImage: {
-        width: '100%',
-        height: 200,
-        backgroundColor: '#e0e0e0',
-    },
-    cardContent: {
-        padding: 16,
-    },
-    plantName: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        marginBottom: 4,
-        color: '#333',
-    },
-    species: {
-        fontSize: 14,
-        color: '#666',
-        fontStyle: 'italic',
-        marginBottom: 8,
-    },
-    waterInfo: {
-        fontSize: 14,
-        color: '#4CAF50',
-    },
-    emptyContainer: {
-        alignItems: 'center',
-        marginTop: 100,
-    },
-    emptyText: {
-        fontSize: 80,
-        marginBottom: 16,
-    },
-    emptySubtext: {
-        fontSize: 18,
-        color: '#999',
-        textAlign: 'center',
-    },
+    cardImage: { width: '100%', height: 200, backgroundColor: '#e0e0e0' },
+    cardContent: { padding: 16 },
+    plantName: { fontSize: 20, fontWeight: 'bold', marginBottom: 4, color: '#333' },
+    species: { fontSize: 14, color: '#666', fontStyle: 'italic', marginBottom: 8 },
+    waterInfo: { fontSize: 14, color: '#4CAF50' },
+    emptyContainer: { alignItems: 'center', marginTop: 100 },
+    emptyText: { fontSize: 80, marginBottom: 16 },
+    emptySubtext: { fontSize: 18, color: '#999', textAlign: 'center' },
     addButton: {
         backgroundColor: '#4CAF50',
         padding: 18,
         margin: 16,
         borderRadius: 12,
         alignItems: 'center',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
         elevation: 5,
     },
-    addButtonText: {
-        color: 'white',
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
+    addButtonText: { color: 'white', fontSize: 18, fontWeight: 'bold' },
 });
