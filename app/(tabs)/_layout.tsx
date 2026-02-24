@@ -19,7 +19,11 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: 'Mis Plantas',
+          headerShown: true,
+          headerStyle: { backgroundColor: '#4CAF50' },
+          headerTintColor: '#fff',
+          headerTitleStyle: { fontWeight: 'bold' },
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
       />
