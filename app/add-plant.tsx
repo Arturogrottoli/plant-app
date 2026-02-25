@@ -27,6 +27,7 @@ async function identifyPlant(imageUri: string) {
         body: JSON.stringify({
             images: [base64],
             classification_level: 'species',
+            details: 'common_names,description,watering,sunlight,toxicity',
         }),
     });
     const data = await response.json();
@@ -54,6 +55,10 @@ export default function AddPlantScreen() {
     const [species, setSpecies] = useState('');
     const [wateringDays, setWateringDays] = useState('3');
     const [identifying, setIdentifying] = useState(false);
+    const [description, setDescription] = useState('');
+    const [wateringInfo, setWateringInfo] = useState('');
+    const [sunlight, setSunlight] = useState('');
+    const [toxicity, setToxicity] = useState('');
 
     const handleImage = async (uri: string) => {
         setImage(uri);
@@ -64,6 +69,12 @@ export default function AddPlantScreen() {
             if (best) {
                 setSpecies(best.name || '');
                 setPlantName(best.details?.common_names?.[0] || best.name || '');
+                setDescription(best.details?.description?.value || '');
+                const w = best.details?.watering;
+                setWateringInfo(w?.max ? `Cada ${w.min}-${w.max} días` : '');
+                const sun = best.details?.sunlight;
+                setSunlight(Array.isArray(sun) ? sun.join(', ') : sun || '');
+                setToxicity(best.details?.toxicity?.value || '');
             }
         } catch (e) {
             Alert.alert('Error', 'No se pudo identificar la planta');
@@ -111,6 +122,10 @@ export default function AddPlantScreen() {
             species: species || 'Desconocida',
             image,
             wateringDays: parseInt(wateringDays) || 3,
+            description,
+            wateringInfo,
+            sunlight,
+            toxicity,
             createdAt: new Date().toISOString(),
         };
         const existingPlants = await loadPlants();
@@ -164,6 +179,35 @@ export default function AddPlantScreen() {
                         value={species}
                         onChangeText={setSpecies}
                     />
+
+                    {description ? (
+                        <View style={styles.infoBox}>
+                            <Text style={styles.infoTitle}>📖 Descripción</Text>
+                            <Text style={styles.infoText}>{description}</Text>
+                        </View>
+                    ) : null}
+
+                    {wateringInfo ? (
+                        <View style={styles.infoBox}>
+                            <Text style={styles.infoTitle}>💧 Riego recomendado</Text>
+                            <Text style={styles.infoText}>{wateringInfo}</Text>
+                        </View>
+                    ) : null}
+
+                    {sunlight ? (
+                        <View style={styles.infoBox}>
+                            <Text style={styles.infoTitle}>☀️ Luz</Text>
+                            <Text style={styles.infoText}>{sunlight}</Text>
+                        </View>
+                    ) : null}
+
+                    {toxicity ? (
+                        <View style={styles.infoBox}>
+                            <Text style={styles.infoTitle}>⚠️ Toxicidad</Text>
+                            <Text style={styles.infoText}>{toxicity}</Text>
+                        </View>
+                    ) : null}
+
                     <Text style={styles.label}>Regar cada cuántos días</Text>
                     <TextInput
                         style={styles.input}
@@ -203,6 +247,9 @@ const styles = StyleSheet.create({
         borderWidth: 1, borderColor: '#ddd', padding: 12,
         borderRadius: 8, marginBottom: 20, fontSize: 16, backgroundColor: '#fafafa',
     },
+    infoBox: { backgroundColor: '#f0f8f0', padding: 16, borderRadius: 12, marginBottom: 16 },
+    infoTitle: { fontSize: 15, fontWeight: '700', color: '#2e7d32', marginBottom: 6 },
+    infoText: { fontSize: 14, color: '#444', lineHeight: 20 },
     saveButton: { backgroundColor: '#4CAF50', padding: 16, borderRadius: 12, alignItems: 'center', marginTop: 10 },
     saveButtonText: { color: 'white', fontSize: 18, fontWeight: 'bold' },
 });
