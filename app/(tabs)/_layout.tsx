@@ -34,6 +34,16 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
         }}
       />
+      <Tabs.Screen
+        name="help"
+        options={{
+          title: 'Ayuda',
+          headerShown: true,
+          headerStyle: { backgroundColor: '#4CAF50' },
+          headerTintColor: '#fff',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="info.circle.fill" color={color} />,
+        }}
+      />
     </Tabs>
   );
 }
