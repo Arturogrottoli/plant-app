@@ -1,5 +1,6 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { HapticTab } from '@/components/haptic-tab';
 import { IconSymbol } from '@/components/ui/icon-symbol';
@@ -8,6 +9,7 @@ import { useColorScheme } from '@/hooks/use-color-scheme';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const { t } = useTranslation();
 
   return (
     <Tabs
@@ -19,7 +21,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Mis Plantas',
+          title: t('tabs.myPlants'),
           headerShown: true,
           headerStyle: { backgroundColor: '#4CAF50' },
           headerTintColor: '#fff',
@@ -37,7 +39,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="help"
         options={{
-          title: 'Ayuda',
+          title: t('tabs.help'),
           headerShown: true,
           headerStyle: { backgroundColor: '#4CAF50' },
           headerTintColor: '#fff',

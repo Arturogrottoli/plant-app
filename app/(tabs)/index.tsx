@@ -1,10 +1,12 @@
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { FlatList, Image, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { loadPlants } from '../../src/utils/storage';
 
 export default function HomeScreen() {
   const router = useRouter();
+  const { t } = useTranslation();
   const [plants, setPlants] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -34,10 +36,10 @@ export default function HomeScreen() {
         <Image source={{ uri: item.image }} style={styles.cardImage} />
       )}
       <View style={styles.cardContent}>
-        <Text style={styles.plantName}>{item.name || 'Sin nombre'}</Text>
-        <Text style={styles.species}>{item.species || 'Especie desconocida'}</Text>
+        <Text style={styles.plantName}>{item.name || t('home.noName')}</Text>
+        <Text style={styles.species}>{item.species || t('home.unknownSpecies')}</Text>
         <Text style={styles.waterInfo}>
-          💧 Regar cada {item.wateringDays} días
+          {t('home.waterEvery', { days: item.wateringDays })}
         </Text>
       </View>
     </TouchableOpacity>
@@ -56,9 +58,7 @@ export default function HomeScreen() {
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
             <Text style={styles.emptyText}>🌿</Text>
-            <Text style={styles.emptySubtext}>
-              ¡No tenés plantas todavía!{"\n"}Agregá la primera
-            </Text>
+            <Text style={styles.emptySubtext}>{t('home.noPlants')}</Text>
           </View>
         }
       />
@@ -66,7 +66,7 @@ export default function HomeScreen() {
         style={styles.addButton}
         onPress={() => router.push('/add-plant')}
       >
-        <Text style={styles.addButtonText}>+ Agregar Planta</Text>
+        <Text style={styles.addButtonText}>{t('home.addPlant')}</Text>
       </TouchableOpacity>
     </View>
   );

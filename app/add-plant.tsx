@@ -12,6 +12,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { loadPlants, savePlants } from '../src/utils/storage';
 
 const PLANT_ID_KEY = '4ulRk3vtVYXO0MMoYMqnbbOwjadPQ4MW8oHc7lnWt2knHFSbgj';
@@ -50,6 +51,7 @@ async function uriToBase64(uri: string): Promise<string> {
 
 export default function AddPlantScreen() {
     const router = useRouter();
+    const { t } = useTranslation();
     const [image, setImage] = useState<string | null>(null);
     const [plantName, setPlantName] = useState('');
     const [species, setSpecies] = useState('');
@@ -71,13 +73,13 @@ export default function AddPlantScreen() {
                 setPlantName(best.details?.common_names?.[0] || best.name || '');
                 setDescription(best.details?.description?.value || '');
                 const w = best.details?.watering;
-                setWateringInfo(w?.max ? `Cada ${w.min}-${w.max} días` : '');
+                setWateringInfo(w?.max ? t('addPlant.wateringRange', { min: w.min, max: w.max }) : '');
                 const sun = best.details?.sunlight;
                 setSunlight(Array.isArray(sun) ? sun.join(', ') : sun || '');
                 setToxicity(best.details?.toxicity?.value || '');
             }
         } catch (e) {
-            Alert.alert('Error', 'No se pudo identificar la planta');
+            Alert.alert(t('addPlant.errorTitle'), t('addPlant.errorIdentify'));
         } finally {
             setIdentifying(false);
         }
@@ -86,7 +88,7 @@ export default function AddPlantScreen() {
     const pickImage = async () => {
         const { status } = await ImagePicker.requestCameraPermissionsAsync();
         if (status !== 'granted') {
-            Alert.alert('Permiso necesario', '¡Se requiere permiso de cámara!');
+            Alert.alert(t('addPlant.errorPermission'), t('addPlant.errorCameraPermission'));
             return;
         }
         const result = await ImagePicker.launchCameraAsync({
@@ -109,17 +111,17 @@ export default function AddPlantScreen() {
 
     const savePlant = async () => {
         if (!plantName.trim()) {
-            Alert.alert('Error', 'Por favor ingresá un nombre');
+            Alert.alert(t('addPlant.errorTitle'), t('addPlant.errorName'));
             return;
         }
         if (!image) {
-            Alert.alert('Error', 'Por favor tomá una foto');
+            Alert.alert(t('addPlant.errorTitle'), t('addPlant.errorPhoto'));
             return;
         }
         const newPlant = {
             id: Date.now().toString(),
             name: plantName,
-            species: species || 'Desconocida',
+            species: species || t('addPlant.unknownSpeciesDefault'),
             image,
             wateringDays: parseInt(wateringDays) || 3,
             description,
@@ -130,8 +132,8 @@ export default function AddPlantScreen() {
         };
         const existingPlants = await loadPlants();
         await savePlants([...existingPlants, newPlant]);
-        Alert.alert('Éxito', '¡Planta añadida! 🌱', [
-            { text: 'OK', onPress: () => router.back() }
+        Alert.alert(t('addPlant.successTitle'), t('addPlant.successMessage'), [
+            { text: t('addPlant.ok'), onPress: () => router.back() }
         ]);
     };
 
@@ -143,15 +145,15 @@ export default function AddPlantScreen() {
                 ) : (
                     <View style={styles.imagePlaceholder}>
                         <Text style={styles.placeholderText}>📷</Text>
-                        <Text style={styles.placeholderSubtext}>Tomá una foto</Text>
+                        <Text style={styles.placeholderSubtext}>{t('addPlant.takePhoto')}</Text>
                     </View>
                 )}
                 <View style={styles.buttonRow}>
                     <TouchableOpacity style={styles.imageButton} onPress={pickImage}>
-                        <Text style={styles.imageButtonText}>📷 Cámara</Text>
+                        <Text style={styles.imageButtonText}>{t('addPlant.camera')}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.imageButton} onPress={pickFromGallery}>
-                        <Text style={styles.imageButtonText}>🖼️ Galería</Text>
+                        <Text style={styles.imageButtonText}>{t('addPlant.gallery')}</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -159,56 +161,56 @@ export default function AddPlantScreen() {
             {identifying && (
                 <View style={styles.loadingContainer}>
                     <ActivityIndicator size="large" color="#4CAF50" />
-                    <Text style={styles.loadingText}>Identificando planta... 🌿</Text>
+                    <Text style={styles.loadingText}>{t('addPlant.identifying')}</Text>
                 </View>
             )}
 
             {image && !identifying && (
                 <View style={styles.formSection}>
-                    <Text style={styles.label}>Nombre de la planta *</Text>
+                    <Text style={styles.label}>{t('addPlant.plantName')}</Text>
                     <TextInput
                         style={styles.input}
-                        placeholder="ej. Potos de la cocina"
+                        placeholder={t('addPlant.plantNamePlaceholder')}
                         value={plantName}
                         onChangeText={setPlantName}
                     />
-                    <Text style={styles.label}>Especie</Text>
+                    <Text style={styles.label}>{t('addPlant.species')}</Text>
                     <TextInput
                         style={styles.input}
-                        placeholder="ej. Monstera, Potos..."
+                        placeholder={t('addPlant.speciesPlaceholder')}
                         value={species}
                         onChangeText={setSpecies}
                     />
 
                     {description ? (
                         <View style={styles.infoBox}>
-                            <Text style={styles.infoTitle}>📖 Descripción</Text>
+                            <Text style={styles.infoTitle}>{t('addPlant.description')}</Text>
                             <Text style={styles.infoText}>{description}</Text>
                         </View>
                     ) : null}
 
                     {wateringInfo ? (
                         <View style={styles.infoBox}>
-                            <Text style={styles.infoTitle}>💧 Riego recomendado</Text>
+                            <Text style={styles.infoTitle}>{t('addPlant.watering')}</Text>
                             <Text style={styles.infoText}>{wateringInfo}</Text>
                         </View>
                     ) : null}
 
                     {sunlight ? (
                         <View style={styles.infoBox}>
-                            <Text style={styles.infoTitle}>☀️ Luz</Text>
+                            <Text style={styles.infoTitle}>{t('addPlant.sunlight')}</Text>
                             <Text style={styles.infoText}>{sunlight}</Text>
                         </View>
                     ) : null}
 
                     {toxicity ? (
                         <View style={styles.infoBox}>
-                            <Text style={styles.infoTitle}>⚠️ Toxicidad</Text>
+                            <Text style={styles.infoTitle}>{t('addPlant.toxicity')}</Text>
                             <Text style={styles.infoText}>{toxicity}</Text>
                         </View>
                     ) : null}
 
-                    <Text style={styles.label}>Regar cada cuántos días</Text>
+                    <Text style={styles.label}>{t('addPlant.wateringDays')}</Text>
                     <TextInput
                         style={styles.input}
                         placeholder="3"
@@ -217,7 +219,7 @@ export default function AddPlantScreen() {
                         keyboardType="numeric"
                     />
                     <TouchableOpacity style={styles.saveButton} onPress={savePlant}>
-                        <Text style={styles.saveButtonText}>💾 Guardar Planta</Text>
+                        <Text style={styles.saveButtonText}>{t('addPlant.save')}</Text>
                     </TouchableOpacity>
                 </View>
             )}

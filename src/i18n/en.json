@@ -1,0 +1,64 @@
+{
+  "tabs": {
+    "myPlants": "My Plants",
+    "help": "Help"
+  },
+  "home": {
+    "noName": "No name",
+    "unknownSpecies": "Unknown species",
+    "waterEvery": "💧 Water every {{days}} days",
+    "noPlants": "You don't have any plants yet!\nAdd your first one",
+    "addPlant": "+ Add Plant"
+  },
+  "addPlant": {
+    "title": "➕ Add Plant",
+    "takePhoto": "Take a photo",
+    "camera": "📷 Camera",
+    "gallery": "🖼️ Gallery",
+    "identifying": "Identifying plant... 🌿",
+    "plantName": "Plant name *",
+    "plantNamePlaceholder": "e.g. Kitchen Pothos",
+    "species": "Species",
+    "speciesPlaceholder": "e.g. Monstera, Pothos...",
+    "description": "📖 Description",
+    "watering": "💧 Recommended watering",
+    "wateringRange": "Every {{min}}-{{max}} days",
+    "sunlight": "☀️ Sunlight",
+    "toxicity": "⚠️ Toxicity",
+    "wateringDays": "Water every how many days",
+    "save": "💾 Save Plant",
+    "unknownSpeciesDefault": "Unknown",
+    "errorTitle": "Error",
+    "errorIdentify": "Could not identify the plant",
+    "errorPermission": "Permission required",
+    "errorCameraPermission": "Camera permission is required!",
+    "errorName": "Please enter a name",
+    "errorPhoto": "Please take a photo",
+    "successTitle": "Success",
+    "successMessage": "Plant added! 🌱",
+    "ok": "OK"
+  },
+  "plantDetail": {
+    "title": "🪴 Plant Details",
+    "loading": "Loading...",
+    "watering": "💧 Watering",
+    "wateringEvery": "Every {{days}} days",
+    "addedOn": "📅 Added on",
+    "delete": "🗑️ Delete Plant",
+    "deleteTitle": "Delete Plant",
+    "deleteMessage": "Are you sure you want to delete this plant?",
+    "cancel": "Cancel",
+    "confirm": "Delete"
+  },
+  "help": {
+    "title": "How the app works",
+    "switchLanguage": "Cambiar a Español 🌐",
+    "myPlants": "🌿 My Plants",
+    "myPlantsDesc": "In this screen you'll see all your saved plants. The border color tells you if they need water:\n• Green: Everything is fine.\n• Yellow: Soon needs water.\n• Red: Needs water urgently!",
+    "addPlant": "➕ Add Plant",
+    "addPlantDesc": "Use the \"+\" button to add a new plant. You can choose a name, the plant type, and how many days between waterings.",
+    "wateringLog": "💧 Watering Log",
+    "wateringLogDesc": "When you water a plant, go to its details and press \"Water\". The timer will reset automatically.",
+    "footer": "Keep your plants happy and healthy! 🌿"
+  }
+}

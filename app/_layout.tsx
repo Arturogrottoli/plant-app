@@ -2,8 +2,10 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
+import { useTranslation } from 'react-i18next';
 
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import '../src/i18n';
 
 export const unstable_settings = {
   anchor: '(tabs)',
@@ -11,6 +13,7 @@ export const unstable_settings = {
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  const { t } = useTranslation();
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
@@ -22,8 +25,8 @@ export default function RootLayout() {
         }}
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="add-plant" options={{ title: '➕ Agregar Planta' }} />
-        <Stack.Screen name="plant/[id]" options={{ title: '🪴 Detalles de Planta' }} />
+        <Stack.Screen name="add-plant" options={{ title: t('addPlant.title') }} />
+        <Stack.Screen name="plant/[id]" options={{ title: t('plantDetail.title') }} />
         <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
       </Stack>
       <StatusBar style="auto" />

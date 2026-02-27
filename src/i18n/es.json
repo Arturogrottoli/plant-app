@@ -1,0 +1,64 @@
+{
+  "tabs": {
+    "myPlants": "Mis Plantas",
+    "help": "Ayuda"
+  },
+  "home": {
+    "noName": "Sin nombre",
+    "unknownSpecies": "Especie desconocida",
+    "waterEvery": "💧 Regar cada {{days}} días",
+    "noPlants": "¡No tenés plantas todavía!\nAgregá la primera",
+    "addPlant": "+ Agregar Planta"
+  },
+  "addPlant": {
+    "title": "➕ Agregar Planta",
+    "takePhoto": "Tomá una foto",
+    "camera": "📷 Cámara",
+    "gallery": "🖼️ Galería",
+    "identifying": "Identificando planta... 🌿",
+    "plantName": "Nombre de la planta *",
+    "plantNamePlaceholder": "ej. Potos de la cocina",
+    "species": "Especie",
+    "speciesPlaceholder": "ej. Monstera, Potos...",
+    "description": "📖 Descripción",
+    "watering": "💧 Riego recomendado",
+    "wateringRange": "Cada {{min}}-{{max}} días",
+    "sunlight": "☀️ Luz",
+    "toxicity": "⚠️ Toxicidad",
+    "wateringDays": "Regar cada cuántos días",
+    "save": "💾 Guardar Planta",
+    "unknownSpeciesDefault": "Desconocida",
+    "errorTitle": "Error",
+    "errorIdentify": "No se pudo identificar la planta",
+    "errorPermission": "Permiso necesario",
+    "errorCameraPermission": "¡Se requiere permiso de cámara!",
+    "errorName": "Por favor ingresá un nombre",
+    "errorPhoto": "Por favor tomá una foto",
+    "successTitle": "Éxito",
+    "successMessage": "¡Planta añadida! 🌱",
+    "ok": "OK"
+  },
+  "plantDetail": {
+    "title": "🪴 Detalles de Planta",
+    "loading": "Cargando...",
+    "watering": "💧 Riego",
+    "wateringEvery": "Cada {{days}} días",
+    "addedOn": "📅 Agregada",
+    "delete": "🗑️ Eliminar Planta",
+    "deleteTitle": "Eliminar Planta",
+    "deleteMessage": "¿Estás seguro de que querés borrar esta planta?",
+    "cancel": "Cancelar",
+    "confirm": "Eliminar"
+  },
+  "help": {
+    "title": "Cómo funciona la app",
+    "switchLanguage": "Switch to English 🌐",
+    "myPlants": "🌿 Mis Plantas",
+    "myPlantsDesc": "En esta pantalla verás todas tus plantas guardadas. El color del borde te indica si necesitan agua:\n• Verde: Todo bien.\n• Amarillo: Le falta poco.\n• Rojo: ¡Necesita agua urgente!",
+    "addPlant": "➕ Agregar Planta",
+    "addPlantDesc": "Usá el botón \"+\" para agregar una nueva planta. Podés elegir un nombre, el tipo de planta y cada cuántos días necesita riego.",
+    "wateringLog": "💧 Registro de Riego",
+    "wateringLogDesc": "Cuando riegues una planta, entrá en su detalle y presioná \"Regar\". El contador se reiniciará automáticamente.",
+    "footer": "¡Mantené tus plantas felices y saludables! 🌿"
+  }
+}
