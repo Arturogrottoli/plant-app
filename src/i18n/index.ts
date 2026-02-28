@@ -16,6 +16,9 @@ i18next.use(initReactI18next).init({
   interpolation: {
     escapeValue: false,
   },
+  react: {
+    useSuspense: false,
+  },
 });
 
 // Load saved language from AsyncStorage and apply it

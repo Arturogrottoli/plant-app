@@ -17,8 +17,7 @@ import { loadPlants, savePlants } from '../src/utils/storage';
 
 const PLANT_ID_KEY = '4ulRk3vtVYXO0MMoYMqnbbOwjadPQ4MW8oHc7lnWt2knHFSbgj';
 
-async function identifyPlant(imageUri: string) {
-    const base64 = await uriToBase64(imageUri);
+async function identifyPlant(base64: string) {
     const response = await fetch('https://plant.id/api/v3/identification', {
         method: 'POST',
         headers: {
@@ -26,27 +25,14 @@ async function identifyPlant(imageUri: string) {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            images: [base64],
+            images: [`data:image/jpeg;base64,${base64}`],
             classification_level: 'species',
             details: 'common_names,description,watering,sunlight,toxicity',
         }),
     });
     const data = await response.json();
+    console.log('Plant.id response:', JSON.stringify(data).slice(0, 300));
     return data;
-}
-
-async function uriToBase64(uri: string): Promise<string> {
-    const response = await fetch(uri);
-    const blob = await response.blob();
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            const base64 = (reader.result as string).split(',')[1];
-            resolve(base64);
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-    });
 }
 
 export default function AddPlantScreen() {
@@ -62,11 +48,11 @@ export default function AddPlantScreen() {
     const [sunlight, setSunlight] = useState('');
     const [toxicity, setToxicity] = useState('');
 
-    const handleImage = async (uri: string) => {
+    const handleImage = async (uri: string, base64: string) => {
         setImage(uri);
         setIdentifying(true);
         try {
-            const result = await identifyPlant(uri);
+            const result = await identifyPlant(base64);
             const best = result?.result?.classification?.suggestions?.[0];
             if (best) {
                 setSpecies(best.name || '');
@@ -95,8 +81,9 @@ export default function AddPlantScreen() {
             allowsEditing: true,
             aspect: [4, 3],
             quality: 0.8,
+            base64: true,
         });
-        if (!result.canceled) handleImage(result.assets[0].uri);
+        if (!result.canceled) handleImage(result.assets[0].uri, result.assets[0].base64!);
     };
 
     const pickFromGallery = async () => {
@@ -105,8 +92,9 @@ export default function AddPlantScreen() {
             allowsEditing: true,
             aspect: [4, 3],
             quality: 0.8,
+            base64: true,
         });
-        if (!result.canceled) handleImage(result.assets[0].uri);
+        if (!result.canceled) handleImage(result.assets[0].uri, result.assets[0].base64!);
     };
 
     const savePlant = async () => {
