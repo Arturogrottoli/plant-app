@@ -7,7 +7,6 @@ import es from './es.json';
 const LANGUAGE_KEY = '@app_language';
 
 i18next.use(initReactI18next).init({
-  compatibilityJSON: 'v4',
   lng: 'es',
   fallbackLng: 'es',
   resources: {

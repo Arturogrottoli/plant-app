@@ -9,11 +9,13 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { loadPlants, savePlants } from '../../src/utils/storage';
 
 export default function PlantDetailScreen() {
     const router = useRouter();
     const { id } = useLocalSearchParams();
+    const { t } = useTranslation();
     const [plant, setPlant] = useState<any>(null);
 
     useFocusEffect(
@@ -30,12 +32,12 @@ export default function PlantDetailScreen() {
 
     const deletePlant = () => {
         Alert.alert(
-            'Eliminar Planta',
-            '¿Estás seguro de que querés borrar esta planta?',
+            t('plantDetail.deleteTitle'),
+            t('plantDetail.deleteMessage'),
             [
-                { text: 'Cancelar', style: 'cancel' },
+                { text: t('plantDetail.cancel'), style: 'cancel' },
                 {
-                    text: 'Eliminar',
+                    text: t('plantDetail.confirm'),
                     style: 'destructive',
                     onPress: async () => {
                         const plants = await loadPlants();
@@ -51,7 +53,7 @@ export default function PlantDetailScreen() {
     if (!plant) {
         return (
             <View style={styles.container}>
-                <Text>Cargando...</Text>
+                <Text>{t('plantDetail.loading')}</Text>
             </View>
         );
     }
@@ -65,14 +67,14 @@ export default function PlantDetailScreen() {
                 <Text style={styles.species}>{plant.species}</Text>
 
                 <View style={styles.infoCard}>
-                    <Text style={styles.infoTitle}>💧 Riego</Text>
+                    <Text style={styles.infoTitle}>{t('plantDetail.watering')}</Text>
                     <Text style={styles.infoText}>
-                        Cada {plant.wateringDays} días
+                        {t('plantDetail.wateringEvery', { days: plant.wateringDays })}
                     </Text>
                 </View>
 
                 <View style={styles.infoCard}>
-                    <Text style={styles.infoTitle}>📅 Agregada</Text>
+                    <Text style={styles.infoTitle}>{t('plantDetail.addedOn')}</Text>
                     <Text style={styles.infoText}>
                         {new Date(plant.createdAt).toLocaleDateString()}
                     </Text>
@@ -82,7 +84,7 @@ export default function PlantDetailScreen() {
                     style={styles.deleteButton}
                     onPress={deletePlant}
                 >
-                    <Text style={styles.deleteButtonText}>🗑️ Eliminar Planta</Text>
+                    <Text style={styles.deleteButtonText}>{t('plantDetail.delete')}</Text>
                 </TouchableOpacity>
             </View>
         </ScrollView>
