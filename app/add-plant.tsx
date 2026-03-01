@@ -18,7 +18,8 @@ import { loadPlants, savePlants } from '../src/utils/storage';
 const PLANT_ID_KEY = '4ulRk3vtVYXO0MMoYMqnbbOwjadPQ4MW8oHc7lnWt2knHFSbgj';
 
 async function identifyPlant(base64: string) {
-    const response = await fetch('https://plant.id/api/v3/identification', {
+    const url = 'https://plant.id/api/v3/identification?details=common_names,description,watering,sunlight,toxicity&language=es';
+    const response = await fetch(url, {
         method: 'POST',
         headers: {
             'Api-Key': PLANT_ID_KEY,
@@ -26,13 +27,11 @@ async function identifyPlant(base64: string) {
         },
         body: JSON.stringify({
             images: [base64],
-            classification_level: 'species',
-            details: 'common_names,description,watering,sunlight,toxicity',
         }),
     });
     if (!response.ok) {
         const text = await response.text();
-        throw new Error(`API ${response.status}: ${text.slice(0, 100)}`);
+        throw new Error(`API ${response.status}: ${text.slice(0, 150)}`);
     }
     const data = await response.json();
     return data;
