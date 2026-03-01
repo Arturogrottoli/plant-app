@@ -9,13 +9,13 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
-import { useTranslation } from 'react-i18next';
+import { useLang } from '../../src/i18n/LanguageContext';
 import { loadPlants, savePlants } from '../../src/utils/storage';
 
 export default function PlantDetailScreen() {
     const router = useRouter();
     const { id } = useLocalSearchParams();
-    const { t } = useTranslation();
+    const { t } = useLang();
     const [plant, setPlant] = useState<any>(null);
 
     useFocusEffect(

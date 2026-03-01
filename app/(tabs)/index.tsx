@@ -1,12 +1,12 @@
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { FlatList, Image, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useTranslation } from 'react-i18next';
+import { useLang } from '../../src/i18n/LanguageContext';
 import { loadPlants } from '../../src/utils/storage';
 
 export default function HomeScreen() {
   const router = useRouter();
-  const { t } = useTranslation();
+  const { t } = useLang();
   const [plants, setPlants] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 

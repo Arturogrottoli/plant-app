@@ -12,7 +12,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
-import { useTranslation } from 'react-i18next';
+import { useLang } from '../src/i18n/LanguageContext';
 import { loadPlants, savePlants } from '../src/utils/storage';
 
 const PLANT_ID_KEY = '4ulRk3vtVYXO0MMoYMqnbbOwjadPQ4MW8oHc7lnWt2knHFSbgj';
@@ -31,13 +31,13 @@ async function identifyPlant(base64: string) {
         }),
     });
     const data = await response.json();
-    console.log('Plant.id response:', JSON.stringify(data).slice(0, 300));
+    console.log('Plant.id response:', JSON.stringify(data).slice(0, 400));
     return data;
 }
 
 export default function AddPlantScreen() {
     const router = useRouter();
-    const { t } = useTranslation();
+    const { t } = useLang();
     const [image, setImage] = useState<string | null>(null);
     const [plantName, setPlantName] = useState('');
     const [species, setSpecies] = useState('');
@@ -48,7 +48,11 @@ export default function AddPlantScreen() {
     const [sunlight, setSunlight] = useState('');
     const [toxicity, setToxicity] = useState('');
 
-    const handleImage = async (uri: string, base64: string) => {
+    const handleImage = async (uri: string, base64: string | null | undefined) => {
+        if (!base64) {
+            Alert.alert('Error', 'No se pudo leer la imagen. Intentá de nuevo.');
+            return;
+        }
         setImage(uri);
         setIdentifying(true);
         try {
@@ -63,9 +67,15 @@ export default function AddPlantScreen() {
                 const sun = best.details?.sunlight;
                 setSunlight(Array.isArray(sun) ? sun.join(', ') : sun || '');
                 setToxicity(best.details?.toxicity?.value || '');
+            } else {
+                // Show raw response so we can debug
+                const errMsg = result?.error?.message || result?.statusCode
+                    ? `Error API: ${result?.error?.message || result?.statusCode}`
+                    : 'No se detectó ninguna planta. Intentá con otra foto más clara.';
+                Alert.alert(t('addPlant.errorTitle'), errMsg);
             }
-        } catch (e) {
-            Alert.alert(t('addPlant.errorTitle'), t('addPlant.errorIdentify'));
+        } catch (e: any) {
+            Alert.alert('Error de red', String(e?.message || e));
         } finally {
             setIdentifying(false);
         }
@@ -80,10 +90,10 @@ export default function AddPlantScreen() {
         const result = await ImagePicker.launchCameraAsync({
             allowsEditing: true,
             aspect: [4, 3],
-            quality: 0.8,
+            quality: 0.5,
             base64: true,
         });
-        if (!result.canceled) handleImage(result.assets[0].uri, result.assets[0].base64!);
+        if (!result.canceled) handleImage(result.assets[0].uri, result.assets[0].base64);
     };
 
     const pickFromGallery = async () => {
@@ -91,10 +101,10 @@ export default function AddPlantScreen() {
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [4, 3],
-            quality: 0.8,
+            quality: 0.5,
             base64: true,
         });
-        if (!result.canceled) handleImage(result.assets[0].uri, result.assets[0].base64!);
+        if (!result.canceled) handleImage(result.assets[0].uri, result.assets[0].base64);
     };
 
     const savePlant = async () => {

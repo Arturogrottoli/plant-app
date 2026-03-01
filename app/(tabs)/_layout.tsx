@@ -1,15 +1,15 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 
 import { HapticTab } from '@/components/haptic-tab';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useLang } from '../../src/i18n/LanguageContext';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const { t } = useTranslation();
+  const { t } = useLang();
 
   return (
     <Tabs

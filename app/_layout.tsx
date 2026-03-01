@@ -2,18 +2,16 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
-import { I18nextProvider, useTranslation } from 'react-i18next';
 
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import i18n from '../src/i18n';
+import { LangProvider, useLang } from '../src/i18n/LanguageContext';
 
 export const unstable_settings = {
   anchor: '(tabs)',
 };
 
-// Separate component so useTranslation() runs inside I18nextProvider
 function AppStack() {
-  const { t } = useTranslation();
+  const { t } = useLang();
   return (
     <Stack
       screenOptions={{
@@ -32,13 +30,12 @@ function AppStack() {
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-
   return (
-    <I18nextProvider i18n={i18n}>
+    <LangProvider>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <AppStack />
         <StatusBar style="auto" />
       </ThemeProvider>
-    </I18nextProvider>
+    </LangProvider>
   );
 }
