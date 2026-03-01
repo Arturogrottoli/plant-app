@@ -25,13 +25,16 @@ async function identifyPlant(base64: string) {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            images: [`data:image/jpeg;base64,${base64}`],
+            images: [base64],
             classification_level: 'species',
             details: 'common_names,description,watering,sunlight,toxicity',
         }),
     });
+    if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`API ${response.status}: ${text.slice(0, 100)}`);
+    }
     const data = await response.json();
-    console.log('Plant.id response:', JSON.stringify(data).slice(0, 400));
     return data;
 }
 
