@@ -1,4 +1,15 @@
 {
+  "login": {
+    "welcome": "Bienvenido de nuevo",
+    "createAccount": "Creá tu cuenta",
+    "email": "Email",
+    "password": "Contraseña",
+    "login": "Iniciar sesión",
+    "register": "Registrarse",
+    "noAccount": "¿No tenés cuenta? Registrate",
+    "haveAccount": "¿Ya tenés cuenta? Iniciá sesión",
+    "fillAll": "Completá todos los campos"
+  },
   "tabs": {
     "myPlants": "Mis Plantas",
     "help": "Ayuda"
