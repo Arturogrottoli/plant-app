@@ -9,25 +9,40 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
+import { API_URL, useAuth } from '../../src/context/AuthContext';
 import { useLang } from '../../src/i18n/LanguageContext';
-import { loadPlants, savePlants } from '../../src/utils/storage';
 
 export default function PlantDetailScreen() {
     const router = useRouter();
     const { id } = useLocalSearchParams();
     const { t } = useLang();
+    const { token } = useAuth();
     const [plant, setPlant] = useState<any>(null);
 
     useFocusEffect(
         useCallback(() => {
-            loadPlantData();
-        }, [id])
+            if (token) loadPlantData();
+        }, [id, token])
     );
 
     const loadPlantData = async () => {
-        const plants = await loadPlants();
-        const foundPlant = plants.find((p: any) => p.id === id);
-        setPlant(foundPlant);
+        try {
+            const res = await fetch(`${API_URL}/api/plants/${id}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            if (!res.ok) return;
+            const p = await res.json();
+            setPlant({
+                id: String(p.id),
+                name: p.name,
+                species: p.species,
+                image: p.image,
+                wateringDays: p.watering_days,
+                createdAt: p.created_at,
+            });
+        } catch (e) {
+            setPlant(null);
+        }
     };
 
     const deletePlant = () => {
@@ -40,9 +55,10 @@ export default function PlantDetailScreen() {
                     text: t('plantDetail.confirm'),
                     style: 'destructive',
                     onPress: async () => {
-                        const plants = await loadPlants();
-                        const updated = plants.filter((p: any) => p.id !== id);
-                        await savePlants(updated);
+                        await fetch(`${API_URL}/api/plants/${id}`, {
+                            method: 'DELETE',
+                            headers: { Authorization: `Bearer ${token}` },
+                        });
                         router.back();
                     }
                 }

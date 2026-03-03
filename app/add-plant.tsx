@@ -12,8 +12,8 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
+import { API_URL, useAuth } from '../src/context/AuthContext';
 import { useLang } from '../src/i18n/LanguageContext';
-import { loadPlants, savePlants } from '../src/utils/storage';
 
 const PLANT_ID_KEY = '4ulRk3vtVYXO0MMoYMqnbbOwjadPQ4MW8oHc7lnWt2knHFSbgj';
 
@@ -40,7 +40,9 @@ async function identifyPlant(base64: string) {
 export default function AddPlantScreen() {
     const router = useRouter();
     const { t } = useLang();
+    const { token } = useAuth();
     const [image, setImage] = useState<string | null>(null);
+    const [imageBase64, setImageBase64] = useState<string | null>(null);
     const [plantName, setPlantName] = useState('');
     const [species, setSpecies] = useState('');
     const [wateringDays, setWateringDays] = useState('3');
@@ -56,6 +58,7 @@ export default function AddPlantScreen() {
             return;
         }
         setImage(uri);
+        setImageBase64(base64);
         setIdentifying(true);
         try {
             const result = await identifyPlant(base64);
@@ -70,7 +73,6 @@ export default function AddPlantScreen() {
                 setSunlight(Array.isArray(sun) ? sun.join(', ') : sun || '');
                 setToxicity(best.details?.toxicity?.value || '');
             } else {
-                // Show raw response so we can debug
                 const errMsg = result?.error?.message || result?.statusCode
                     ? `Error API: ${result?.error?.message || result?.statusCode}`
                     : 'No se detectó ninguna planta. Intentá con otra foto más clara.';
@@ -114,27 +116,38 @@ export default function AddPlantScreen() {
             Alert.alert(t('addPlant.errorTitle'), t('addPlant.errorName'));
             return;
         }
-        if (!image) {
+        if (!imageBase64) {
             Alert.alert(t('addPlant.errorTitle'), t('addPlant.errorPhoto'));
             return;
         }
-        const newPlant = {
-            id: Date.now().toString(),
-            name: plantName,
-            species: species || t('addPlant.unknownSpeciesDefault'),
-            image,
-            wateringDays: parseInt(wateringDays) || 3,
-            description,
-            wateringInfo,
-            sunlight,
-            toxicity,
-            createdAt: new Date().toISOString(),
-        };
-        const existingPlants = await loadPlants();
-        await savePlants([...existingPlants, newPlant]);
-        Alert.alert(t('addPlant.successTitle'), t('addPlant.successMessage'), [
-            { text: t('addPlant.ok'), onPress: () => router.back() }
-        ]);
+        try {
+            const res = await fetch(`${API_URL}/api/plants`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    name: plantName,
+                    species: species || t('addPlant.unknownSpeciesDefault'),
+                    image: `data:image/jpeg;base64,${imageBase64}`,
+                    watering_days: parseInt(wateringDays) || 3,
+                    description,
+                    watering_info: wateringInfo,
+                    sunlight,
+                    toxicity,
+                }),
+            });
+            if (!res.ok) {
+                const err = await res.json();
+                throw new Error(err.error || 'Error al guardar');
+            }
+            Alert.alert(t('addPlant.successTitle'), t('addPlant.successMessage'), [
+                { text: t('addPlant.ok'), onPress: () => router.back() }
+            ]);
+        } catch (e: any) {
+            Alert.alert(t('addPlant.errorTitle'), e.message);
+        }
     };
 
     return (

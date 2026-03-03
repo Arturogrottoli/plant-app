@@ -64,6 +64,8 @@
   "help": {
     "title": "How the app works",
     "switchLanguage": "Cambiar a Español 🌐",
+    "loggedAs": "Logged in as",
+    "logout": "Log out",
     "myPlants": "🌿 My Plants",
     "myPlantsDesc": "In this screen you'll see all your saved plants. The border color tells you if they need water:\n• Green: Everything is fine.\n• Yellow: Soon needs water.\n• Red: Needs water urgently!",
     "addPlant": "➕ Add Plant",

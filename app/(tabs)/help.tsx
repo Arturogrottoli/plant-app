@@ -1,9 +1,11 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useAuth } from '../../src/context/AuthContext';
 import { useLang } from '../../src/i18n/LanguageContext';
 
 export default function HelpScreen() {
     const { t, lang, setLang } = useLang();
+    const { user, logout } = useAuth();
 
     const handleToggleLanguage = () => {
         setLang(lang === 'es' ? 'en' : 'es');
@@ -38,6 +40,14 @@ export default function HelpScreen() {
 
             <View style={styles.footer}>
                 <Text style={styles.footerText}>{t('help.footer')}</Text>
+            </View>
+
+            <View style={styles.userCard}>
+                <Text style={styles.loggedAsLabel}>{t('help.loggedAs')}</Text>
+                <Text style={styles.userEmail}>{user?.email}</Text>
+                <TouchableOpacity style={styles.logoutButton} onPress={logout}>
+                    <Text style={styles.logoutText}>{t('help.logout')}</Text>
+                </TouchableOpacity>
             </View>
         </ScrollView>
     );
@@ -78,4 +88,22 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     footerText: { fontSize: 16, color: '#444', textAlign: 'center', fontWeight: '500', lineHeight: 24 },
+    userCard: {
+        marginTop: 24,
+        padding: 20,
+        borderRadius: 12,
+        backgroundColor: '#f5f5f5',
+        alignItems: 'center',
+        gap: 8,
+    },
+    loggedAsLabel: { fontSize: 13, color: '#999' },
+    userEmail: { fontSize: 16, fontWeight: '600', color: '#333' },
+    logoutButton: {
+        marginTop: 8,
+        backgroundColor: '#f44336',
+        paddingHorizontal: 24,
+        paddingVertical: 10,
+        borderRadius: 20,
+    },
+    logoutText: { color: '#fff', fontWeight: '700', fontSize: 15 },
 });

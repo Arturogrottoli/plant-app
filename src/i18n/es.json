@@ -64,6 +64,8 @@
   "help": {
     "title": "Cómo funciona la app",
     "switchLanguage": "Switch to English 🌐",
+    "loggedAs": "Sesión iniciada como",
+    "logout": "Cerrar sesión",
     "myPlants": "🌿 Mis Plantas",
     "myPlantsDesc": "En esta pantalla verás todas tus plantas guardadas. El color del borde te indica si necesitan agua:\n• Verde: Todo bien.\n• Amarillo: Le falta poco.\n• Rojo: ¡Necesita agua urgente!",
     "addPlant": "➕ Agregar Planta",

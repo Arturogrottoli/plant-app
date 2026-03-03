@@ -1,24 +1,39 @@
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { FlatList, Image, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { API_URL, useAuth } from '../../src/context/AuthContext';
 import { useLang } from '../../src/i18n/LanguageContext';
-import { loadPlants } from '../../src/utils/storage';
 
 export default function HomeScreen() {
   const router = useRouter();
   const { t } = useLang();
+  const { token } = useAuth();
   const [plants, setPlants] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
-      loadPlantsData();
-    }, [])
+      if (token) loadPlantsData();
+    }, [token])
   );
 
   const loadPlantsData = async () => {
-    const data = await loadPlants();
-    setPlants(data);
+    try {
+      const res = await fetch(`${API_URL}/api/plants`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      setPlants(data.map((p: any) => ({
+        id: String(p.id),
+        name: p.name,
+        species: p.species,
+        image: p.image,
+        wateringDays: p.watering_days,
+        createdAt: p.created_at,
+      })));
+    } catch (e) {
+      setPlants([]);
+    }
   };
 
   const onRefresh = async () => {
