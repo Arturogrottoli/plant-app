@@ -4,7 +4,7 @@ import React, { createContext, useCallback, useContext, useEffect, useState } fr
 // Cambiá esta IP por la de tu PC cuando probás en el celular
 // Para emulador Android usá: http://10.0.2.2:3000
 // Para celular físico usá: http://TU_IP_LOCAL:3000 (ej: http://192.168.1.50:3000)
-export const API_URL = 'http://localhost:3000';
+export const API_URL = 'http://192.168.0.141:3000';
 
 interface User {
   id: number;
