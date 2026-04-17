@@ -1,6 +1,6 @@
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { FlatList, Image, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, Image, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { API_URL, useAuth } from '../../src/context/AuthContext';
 import { useLang } from '../../src/i18n/LanguageContext';
 
@@ -9,6 +9,7 @@ export default function HomeScreen() {
   const { t } = useLang();
   const { token } = useAuth();
   const [plants, setPlants] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
   useFocusEffect(
@@ -33,6 +34,8 @@ export default function HomeScreen() {
       })));
     } catch (e) {
       setPlants([]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -59,6 +62,14 @@ export default function HomeScreen() {
       </View>
     </TouchableOpacity>
   );
+
+  if (loading) {
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="#4CAF50" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -88,6 +99,7 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  loaderContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#f5f5f5' },
   container: { flex: 1, backgroundColor: '#f5f5f5' },
   list: { padding: 16 },
   card: {

@@ -1,6 +1,7 @@
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useCallback, useState } from 'react';
 import {
+    ActivityIndicator,
     Alert,
     Image,
     ScrollView,
@@ -68,8 +69,8 @@ export default function PlantDetailScreen() {
 
     if (!plant) {
         return (
-            <View style={styles.container}>
-                <Text>{t('plantDetail.loading')}</Text>
+            <View style={styles.loaderContainer}>
+                <ActivityIndicator size="large" color="#4CAF50" />
             </View>
         );
     }
@@ -108,6 +109,7 @@ export default function PlantDetailScreen() {
 }
 
 const styles = StyleSheet.create({
+    loaderContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' },
     container: { flex: 1, backgroundColor: 'white' },
     image: { width: '100%', height: 300, backgroundColor: '#e0e0e0' },
     content: { padding: 20 },
